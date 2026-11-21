@@ -5,13 +5,11 @@ CLIENT = Minecraft.getInstance()
 
 pyj = eval_pyjinn_script("""
 from config_manager import ConfigManager
+from config_class import create_config_class
 
-
-YACLConfig = JavaClass("dev.isxander.yacl3.platform.YACLConfig")
 
 def main():
-	config_class = type(YACLConfig)
-	config_manager = ConfigManager(config_class, "yacltest.json", "Title", "Category")
+	config_manager = ConfigManager(create_config_class(), "yacltest.json", "Title", "Category")
 	config_manager.open_config()
 """)
 
