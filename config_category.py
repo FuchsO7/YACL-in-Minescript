@@ -9,6 +9,7 @@ Option = JavaClass("dev.isxander.yacl3.api.Option")
 ButtonOption = JavaClass("dev.isxander.yacl3.api.ButtonOption")
 BooleanControllerBuilder = JavaClass("dev.isxander.yacl3.api.controller.BooleanControllerBuilder")
 IntegerFieldControllerBuilder = JavaClass("dev.isxander.yacl3.api.controller.IntegerFieldControllerBuilder")
+LongFieldControllerBuilder = JavaClass("dev.isxander.yacl3.api.controller.LongFieldControllerBuilder")
 FloatFieldControllerBuilder = JavaClass("dev.isxander.yacl3.api.controller.FloatFieldControllerBuilder")
 DoubleFieldControllerBuilder = JavaClass("dev.isxander.yacl3.api.controller.DoubleFieldControllerBuilder")
 StringControllerBuilder = JavaClass("dev.isxander.yacl3.api.controller.StringControllerBuilder")
@@ -18,7 +19,7 @@ class ConfigField:
 
 	def __init__(self, defaults_object, config_object, field):
 		self.name = field.getName()
-		self.datatype = field.getType().toString()
+		self.datatype = field.getType().getName()
 		self.defaults_object = defaults_object
 		self.config_object = config_object
 		self.field = field
@@ -66,8 +67,10 @@ class ConfigCategory:
 	def _get_controller_type(self, controller_type):
 		if controller_type =="boolean":
 			return lambda opt: BooleanControllerBuilder.create(opt).coloured(True)
-		elif controller_type == "integer":
+		elif controller_type == "int":
 			return lambda opt: IntegerFieldControllerBuilder.create(opt)
+		elif controller_type == "long":
+			return lambda opt: LongFieldControllerBuilder.create(opt)
 		elif controller_type == "float":
 			return lambda opt: FloatFieldControllerBuilder.create(opt).formatValue(lambda value: Component.literal(f"{value:.1f}"))
 		elif controller_type == "double":
@@ -75,7 +78,7 @@ class ConfigCategory:
 		elif controller_type == "java.lang.String":
 			return lambda opt: StringControllerBuilder.create(opt)
 		else:
-			raise ValueError(f"Unknown Controller Type {controller_type}")
+			raise Exception(f"Unknown Controller Type {controller_type}")
 
 	def _create_controller_option(self, option):
 		return Option.createBuilder().name(Component.literal(option.name)).controller(self._get_controller_type(option.datatype)).binding(option.default(), option.getter, option.setter).build()
