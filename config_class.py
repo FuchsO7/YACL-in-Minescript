@@ -1,4 +1,4 @@
-IS_PYJINN_PLUS_PRESENT = False
+IS_PYJINN_PLUS_PRESENT = True
 try:
 	import pyjinn_plus
 except:
