@@ -1,31 +1,17 @@
-#!python
+IS_PYJINN_PLUS_PRESENT = False
+try:
+	import pyjinn_plus
+except:
+	IS_PYJINN_PLUS_PRESENT = False
 
-Thread = JavaClass("java.lang.Thread")
-ByteClassLoader = JavaClass("de.minescript_javaclass_loader.classloader.ByteClassLoader")
-InMemoryCompiler = JavaClass("de.minescript_javaclass_loader.compiler.InMemoryCompiler")
+def create_config_class_with_pyjinn_plus(name, source):	
+	if not IS_PYJINN_PLUS_PRESENT:
+		raise Exception("Pyjinn Plus was not found")
+	class_ = pyjinn_plus.ClassBuilder.new_class(name, source)
+	pyjinn_plus.ClassBuilder.load_class(name)
+	return type(class_)
 
-source = """
-package net.minescript_custom_javaclasses;
-
-import dev.isxander.yacl3.config.v2.api.SerialEntry;
-
-public class Config {
-    @SerialEntry
-    public boolean a = true;
-	@SerialEntry
-    public int b = 1;
-	@SerialEntry
-    public long c = -1L;
-	@SerialEntry
-    public float d = 3.14f;
-	@SerialEntry
-    public double e = 2.71;
-	@SerialEntry
-    public String f = "Hello World!";
-}
-"""
-
-def create_config_class():
-	loader = ByteClassLoader(Thread.currentThread().getContextClassLoader())
-	bytes_ = InMemoryCompiler.compileToBytes("net.minescript_custom_javaclasses.Config", source)
-	return loader.loadFromBytes("net.minescript_custom_javaclasses.Config", bytes_)
+def create_config_class_with_addon_mod(name, source):
+	InMemoryCompiler = JavaClass("de.minescript_javaclass_loader.compiler.InMemoryCompiler")
+	compiler = InMemoryCompiler()
+	return compiler.compileAndLoadClasses(name, source)
