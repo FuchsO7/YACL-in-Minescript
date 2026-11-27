@@ -13,4 +13,4 @@ def create_config_class_with_pyjinn_plus(name, source):
 def create_config_class_with_addon_mod(name, source):
 	InMemoryCompiler = JavaClass("de.minescript_javaclass_loader.compiler.InMemoryCompiler")
 	compiler = InMemoryCompiler()
-	return compiler.compileAndLoadClasses(name, source)
+	return compiler.compileAndLoadClass(name, source)
